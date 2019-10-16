@@ -1,0 +1,184 @@
+@startuml
+skinparam classAttributeIconSize 0
+class types {
++ {method} {static} NewAliasedTypeDescriptor(string,string,*TypeDescriptor) *AliasedTypeDescriptor
++ {method} {static} NewArrayDescriptor(*TypeDescriptor) *ArrayDescriptor
++ {method} {static} GetArrayTypeNameForTypename(string) string
++ {method} {static} NewAttributeDescriptor(string,TypeDescriptor,string) *AttributeDescriptor
++ {method} {static} NewChannelDescriptor(int,*TypeDescriptor) *ChannelDescriptor
++ {method} {static} GetChannelTypeNameForTypename(int,string) string
++ {method} {static} NewEllipsisDescriptor(*TypeDescriptor) *EllipsisDescriptor
++ {method} {static} GetEllipsisTypeNameForTypename(string) string
++ {method} {static} NewFunctionDescriptor(string,string) *FunctionDescriptor
++ {method} {static} NewInterfaceDescriptor(string,string) *InterfaceDescriptor
++ {method} {static} NewMapDescriptor(*TypeDescriptor,*TypeDescriptor) *MapDescriptor
++ {method} {static} GetMapTypeNameForTypenames(string,string) string
++ {method} {static} NewMethodDescriptor(string,[]*AttributeDescriptor,[]*AttributeDescriptor) *MethodDescriptor
++ {method} {static} NewPlaceholderDescriptor(string,string) *PlaceholderDescriptor
++ {method} {static} NewPointerDescriptor(*TypeDescriptor) *PointerDescriptor
++ {method} {static} GetPointerTypeNameForTypename(string) string
++ {method} {static} NewScopeDescriptor(string) *ScopeDescriptor
++ {method} {static} NewStructDescriptor(string,string) *StructDescriptor
++ {method} {static} NewBuiltinStructDescriptor(string) *StructDescriptor
++ {method} {static} IsNameLocalToScope(string,string) (string,string,bool)
+}
+class "StructDescriptor" {
+- {field} bool builtin
++ {field} string Package
++ {field} string Name
++ {field} []*AttributeDescriptor Attributes
++ {field} []*MethodDescriptor Methods
++ {field} []*TypeDescriptor PromotedTypes
++ {method} String() string
++ {method} IsBuiltin() bool
++ {method} GetSimpleName() string
++ {method} GetCannonicalName() string
++ {method} AddAttribute(*AttributeDescriptor)
++ {method} GetAttributes() []*AttributeDescriptor
++ {method} AddPromotedType(*TypeDescriptor)
++ {method} GetPromotedTypes() []*TypeDescriptor
++ {method} AddMethod(*MethodDescriptor)
++ {method} GetMethods() []*MethodDescriptor
+}
+"AttributeDescriptor" -- StructDescriptor
+"MethodDescriptor" -- StructDescriptor
+"TypeDescriptor" -- StructDescriptor
+interface "TypeWithAttributes" {
++ {method} {abstract} AddAttribute(*AttributeDescriptor)
++ {method} {abstract} GetAttributes() []*AttributeDescriptor
++ {method} {abstract} AddPromotedType(*TypeDescriptor)
++ {method} {abstract} GetPromotedTypes() []*TypeDescriptor
+}
+"TypeDescriptor" <|-- TypeWithAttributes
+class "FunctionDescriptor" {
++ {field} string Package
++ {field} string Name
++ {field} []*AttributeDescriptor Params
++ {field} []*AttributeDescriptor Returns
++ {method} String() string
++ {method} GetSimpleName() string
++ {method} GetCannonicalName() string
++ {method} AddParameter(*AttributeDescriptor)
++ {method} AddReturn(*AttributeDescriptor)
+}
+"AttributeDescriptor" -- FunctionDescriptor
+"AttributeDescriptor" -- FunctionDescriptor
+interface "TypeDescriptor" {
++ {method} {abstract} GetSimpleName() string
++ {method} {abstract} GetCannonicalName() string
+}
+class "InterfaceDescriptor" {
++ {field} string Name
++ {field} string Package
++ {field} []*MethodDescriptor Methods
++ {field} []*TypeDescriptor PromotedTypes
++ {method} AddPromotedType(*TypeDescriptor)
++ {method} String() string
++ {method} GetSimpleName() string
++ {method} GetCannonicalName() string
++ {method} AddMethod(*MethodDescriptor)
++ {method} GetMethods() []*MethodDescriptor
+}
+"MethodDescriptor" -- InterfaceDescriptor
+"TypeDescriptor" -- InterfaceDescriptor
+class "AttributeDescriptor" {
++ {field} string Name
++ {field} string CannonicalTypeName
++ {field} string Tag
++ {method} GetSignature() string
++ {method} IsPublic() bool
+}
+class "AliasedTypeDescriptor" {
++ {field} string Package
++ {field} string Name
++ {field} *TypeDescriptor AliasedType
++ {field} []*MethodDescriptor Methods
++ {method} GetSimpleName() string
++ {method} GetCannonicalName() string
++ {method} String() string
++ {method} AddMethod(*MethodDescriptor)
++ {method} GetMethods() []*MethodDescriptor
+}
+"TypeDescriptor" -- AliasedTypeDescriptor
+"MethodDescriptor" -- AliasedTypeDescriptor
+class "EllipsisDescriptor" {
++ {field} *TypeDescriptor RefType
++ {method} String() string
++ {method} GetSimpleName() string
++ {method} GetCannonicalName() string
++ {method} ReplaceRefTypeIfPlaceholder(*TypeDescriptor)
+}
+"TypeDescriptor" -- EllipsisDescriptor
+class "MapDescriptor" {
++ {field} *TypeDescriptor KeyType
++ {field} *TypeDescriptor ValueType
++ {method} ReplaceKeyTypeIfPlaceholder(*TypeDescriptor)
++ {method} ReplaceValueTypeIfPlaceholder(*TypeDescriptor)
++ {method} String() string
++ {method} GetSimpleName() string
++ {method} GetCannonicalName() string
+}
+"TypeDescriptor" -- MapDescriptor
+"TypeDescriptor" -- MapDescriptor
+class "PointerDescriptor" {
++ {field} *TypeDescriptor RefType
++ {method} String() string
++ {method} GetSimpleName() string
++ {method} GetCannonicalName() string
++ {method} ReplaceRefTypeIfPlaceholder(*TypeDescriptor)
+}
+"TypeDescriptor" -- PointerDescriptor
+interface "TypeWithMethods" {
++ {method} {abstract} AddMethod(*MethodDescriptor)
++ {method} {abstract} GetMethods() []*MethodDescriptor
+}
+"TypeDescriptor" <|-- TypeWithMethods
+class "ScopeDescriptor" {
++ {field} string Name
++ {field} string CannonicalName
++ {field} []*MethodDescriptor Methods
++ {method} String() string
++ {method} GetSimpleName() string
++ {method} GetCannonicalName() string
++ {method} AddMethod(*MethodDescriptor)
++ {method} GetMethods() []*MethodDescriptor
+}
+"MethodDescriptor" -- ScopeDescriptor
+class "ChannelDescriptor" {
++ {field} int Direction
++ {field} *TypeDescriptor RefType
++ {method} String() string
++ {method} GetSimpleName() string
++ {method} GetCannonicalName() string
++ {method} ReplaceRefTypeIfPlaceholder(*TypeDescriptor)
+}
+"TypeDescriptor" -- ChannelDescriptor
+class "ArrayDescriptor" {
++ {field} *TypeDescriptor RefType
++ {method} String() string
++ {method} GetSimpleName() string
++ {method} GetCannonicalName() string
++ {method} ReplaceRefTypeIfPlaceholder(*TypeDescriptor)
+}
+"TypeDescriptor" -- ArrayDescriptor
+class "MethodDescriptor" {
++ {field} string Name
++ {field} []*AttributeDescriptor Params
++ {field} []*AttributeDescriptor Returns
++ {method} GetSignature() string
++ {method} IsPublic() bool
+}
+"AttributeDescriptor" -- MethodDescriptor
+"AttributeDescriptor" -- MethodDescriptor
+class "PlaceholderDescriptor" {
++ {field} string Name
++ {field} string Scope
++ {field} []*MethodDescriptor Methods
++ {method} GetSimpleName() string
++ {method} GetCannonicalName() string
++ {method} String() string
++ {method} AddMethod(*MethodDescriptor)
++ {method} GetMethods() []*MethodDescriptor
+}
+"MethodDescriptor" -- PlaceholderDescriptor
+@enduml

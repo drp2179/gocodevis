@@ -1,0 +1,9 @@
+@startuml
+skinparam classAttributeIconSize 0
+class app {
++ {method} {static} FindGoFilesToProcess(string,bool) []string
++ {method} {static} GeneratePlantUMLFiles(*assembly.MasterTypeCollection,string,bool)
+- {method} {static} writeAttributeToStringBuilder(*strings.Builder,*types.AttributeDescriptor,string)
+- {method} {static} writeMethodToStringBuilder(*strings.Builder,*types.MethodDescriptor,string,string)
+}
+@enduml

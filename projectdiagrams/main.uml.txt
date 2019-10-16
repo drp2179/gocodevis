@@ -1,0 +1,7 @@
+@startuml
+skinparam classAttributeIconSize 0
+class main {
+- {method} {static} processFile(string,*ast.File,*assembly.MasterTypeCollection,bool)
+- {method} {static} main()
+}
+@enduml

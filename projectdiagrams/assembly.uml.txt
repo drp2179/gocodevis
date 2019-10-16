@@ -1,0 +1,46 @@
+@startuml
+skinparam classAttributeIconSize 0
+class assembly {
+- {method} {static} newBuiltinType(string) *types.StructDescriptor
+- {method} {static} newBuiltinDataType(string) *types.TypeDescriptor
++ {method} {static} NewMasterTypeCollection() *MasterTypeCollection
++ {method} {static} ExtractFieldName(*ast.Field) string
+}
+class "MasterTypeCollection" {
+- {field} bool verbose
+- {field} map[string][*types.ScopeDescriptor] scopesMap
+- {field} map[string][*types.TypeDescriptor] dataTypesMap
+- {field} map[string][*types.PlaceholderDescriptor] placeholdersMap
++ {method} SetVerbose(bool)
++ {method} GetDataType(string) (*types.TypeDescriptor,bool)
++ {method} GetScope(string) (*types.ScopeDescriptor,bool)
++ {method} GetPlaceholder(string) (*types.PlaceholderDescriptor,bool)
++ {method} GetDataTypeKeys() []string
++ {method} GetScopeKeys() []string
++ {method} UpdateFromFuncDecl(string,*ast.FuncDecl)
++ {method} UpdateFromTypeSpec(string,*ast.TypeSpec)
+- {method} addAliasedDataType(string,string,*types.TypeDescriptor)
+- {method} replaceDataType(*types.TypeDescriptor)
+- {method} addNewDataType(*types.TypeDescriptor)
+- {method} addNewScopeType(*types.ScopeDescriptor)
+- {method} extractTypeFromExpr(string,ast.Expr) (string,*types.TypeDescriptor)
+- {method} getOrCreatePlaceholderForIdent(string,*ast.Ident) (string,*types.TypeDescriptor)
+- {method} extractAttributesFromFieldList(string,*ast.FieldList) []*types.AttributeDescriptor
+- {method} extractReceiverTypeFromFieldList(string,*ast.FieldList) (string,*types.TypeDescriptor)
++ {method} ExtractFieldType(string,*ast.Field) (string,*types.TypeDescriptor)
+- {method} updateFunctionDescriptorParamsFromFieldList(*types.FunctionDescriptor,*ast.FieldList)
+- {method} updateFunctionDescriptorReturnsFromFieldList(*types.FunctionDescriptor,*ast.FieldList)
+- {method} updateStructDescriptorAttributesFromFieldList(string,*types.TypeWithAttributes,*ast.FieldList)
+- {method} updateInterfaceFromFieldList(*types.InterfaceDescriptor,*ast.FieldList)
++ {method} ExtractIdentType(string,*ast.Ident) (string,*types.TypeDescriptor)
++ {method} ExtractPointerType(string,*ast.StarExpr) (string,*types.TypeDescriptor)
++ {method} ExtractArrayType(string,*ast.ArrayType) (string,*types.TypeDescriptor)
++ {method} ExtractMapType(string,*ast.MapType) (string,*types.TypeDescriptor)
++ {method} ExtractChannelType(string,*ast.ChanType) (string,*types.TypeDescriptor)
++ {method} ExtractEllipsis(string,*ast.Ellipsis) (string,*types.TypeDescriptor)
++ {method} ExtractSelectorType(*ast.SelectorExpr) (string,*types.TypeDescriptor)
++ {method} ExtractFuncType(string,*ast.FuncType) (string,*types.TypeDescriptor)
++ {method} ExtractInterfaceType(*ast.InterfaceType) (string,*types.TypeDescriptor)
++ {method} ExtractStructType(string,*ast.StructType) (string,*types.TypeDescriptor)
+}
+@enduml
