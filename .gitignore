@@ -1,0 +1,6 @@
+/.vscode/
+/pkg/
+/output/
+/bin/
+/**/*.exe
+/**/*.jar
